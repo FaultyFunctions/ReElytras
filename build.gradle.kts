@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "ru.luk.reelytras"
-version = "1.1"
+version = "1.2"
 
 application {
     mainClass.set("$group.ReElytras")
@@ -52,7 +52,7 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(21)
     }
 
     processResources {
@@ -61,5 +61,5 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }

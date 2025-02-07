@@ -17,6 +17,8 @@ class ReElytras : JavaPlugin() {
         var allowFireworkBoost by Delegates.notNull<Boolean>()
         var allowRiptideBoost by Delegates.notNull<Boolean>()
         var allowEnchantments by Delegates.notNull<Boolean>()
+        var allowMending by Delegates.notNull<Boolean>()
+        var allowUnbreaking by Delegates.notNull<Boolean>()
         var allowRepairWithPhantomMembrane by Delegates.notNull<Boolean>()
         var allowUnificationRepairInAnvil by Delegates.notNull<Boolean>()
         var allowUnificationRepairInCraft by Delegates.notNull<Boolean>()
@@ -27,7 +29,7 @@ class ReElytras : JavaPlugin() {
         var allowElytrasWhenRaining by Delegates.notNull<Boolean>()
         var repairWithPhantomMembranePercent by Delegates.notNull<Int>()
         var damagePerSecond by Delegates.notNull<Int>()
-    }
+	}
 
     override fun onEnable() {
         plugin = this
@@ -42,6 +44,8 @@ class ReElytras : JavaPlugin() {
         allowFireworkBoost = config.getBoolean("allowFireworkBoost")
         allowRiptideBoost = config.getBoolean("allowRiptideBoost")
         allowEnchantments = config.getBoolean("allowEnchantments")
+        allowMending = config.getBoolean("allowMending")
+        allowUnbreaking = config.getBoolean("allowUnbreaking")
         allowRepairWithPhantomMembrane = config.getBoolean("allowRepairWithPhantomMembrane")
         allowUnificationRepairInAnvil = config.getBoolean("allowUnificationRepairInAnvil")
         allowUnificationRepairInCraft = config.getBoolean("allowUnificationRepairInCraft")
@@ -59,5 +63,6 @@ class ReElytras : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(ElytraUnificationListener(), this)
 
         getCommand("reelytras")?.setExecutor(PluginCommand())
+
     }
 }

@@ -6,6 +6,9 @@ import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemDamageEvent
+import org.bukkit.inventory.meta.Damageable
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 class ElytraDamageListener : Listener {
     @EventHandler
@@ -13,16 +16,30 @@ class ElytraDamageListener : Listener {
         val chestplateItem = event.player.inventory.chestplate ?: return
 
         if (chestplateItem.type == Material.ELYTRA) {
-            event.damage = ReElytras.damagePerSecond
+            val meta: Damageable = chestplateItem.itemMeta as Damageable
 
-            if (chestplateItem.type.maxDurability.toInt() - chestplateItem.durability <= 2) {
+            if (event.player.isSneaking) {
+                val enchantments = chestplateItem.enchantments
+
+                for (enchantment in enchantments) {
+                    if (enchantment.key.key.toString() == "vane_enchantments:angel") {
+                        event.damage = ReElytras.damagePerSecond * 2
+                    }
+                }
+            } else {
+                event.damage = ReElytras.damagePerSecond
+            }
+
+            if (chestplateItem.type.maxDurability.toInt() - meta.damage <= 2) {
                 if (ReElytras.permanentDestroy) {
                     event.player.inventory.chestplate = null
                 }
 
                 if (ReElytras.playDestroySound) {
-                    event.player.world.playSound(event.player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+                    event.player.world.playSound(event.player.location, Sound.ENTITY_ITEM_BREAK, 1f, 0.8f)
                 }
+
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 400, 1, true, true, true))
             }
         }
     }
