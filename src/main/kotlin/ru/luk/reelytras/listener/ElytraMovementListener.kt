@@ -1,7 +1,17 @@
 package ru.luk.reelytras.listener
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Bukkit
+import org.bukkit.Color
 import ru.luk.reelytras.ReElytras
 
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.advancement.Advancement
+import org.bukkit.advancement.AdvancementProgress
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -13,9 +23,21 @@ import org.bukkit.event.player.PlayerRiptideEvent
 class ElytraFireworkListener : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun onElytraToggleGlide(event: EntityToggleGlideEvent) {
-        if (event.isGliding && (!ReElytras.allowElytras
-                    || !ReElytras.allowElytrasWhenRaining && event.entity.isInRain)) {
+        if (event.isGliding && (!ReElytras.allowElytras || !ReElytras.allowElytrasWhenRaining && event.entity.isInRain)) {
             event.isCancelled = true
+        }
+
+        if (event.isGliding) {
+            val player = event.entity as? Player ?: return
+            val dragonAdvancement: Advancement? = Bukkit.getAdvancement(NamespacedKey("minecraft", "end/kill_dragon"))
+            if (dragonAdvancement != null) {
+                if (!player.getAdvancementProgress(dragonAdvancement).isDone) {
+                    player.sendMessage(Component.text("ꐐ")
+                        .append(Component.text(" You can't use an elytra until you have slain the Ender Dragon!").color(NamedTextColor.RED)))
+                    player.setCooldown(Material.ELYTRA, 100)
+                    event.isCancelled = true
+                }
+            }
         }
     }
 
@@ -23,6 +45,15 @@ class ElytraFireworkListener : Listener {
     fun onElytraMovement(event: PlayerMoveEvent) {
         if (!ReElytras.allowElytrasWhenRaining && event.player.isInRain && event.player.isGliding) {
             event.player.isGliding = false
+        }
+
+        if (event.player.isGliding) {
+            val dragonAdvancement: Advancement? = Bukkit.getAdvancement(NamespacedKey("minecraft", "end/kill_dragon"))
+            if (dragonAdvancement != null) {
+                if (!event.player.getAdvancementProgress(dragonAdvancement).isDone) {
+                    event.player.isGliding = false
+                }
+            }
         }
     }
 

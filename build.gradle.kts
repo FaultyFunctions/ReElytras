@@ -7,7 +7,7 @@ plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "1.7.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.0.0-beta8"
 }
 
 group = "ru.luk.reelytras"
@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.20-R0.1-SNAPSHOT")
+    implementation("com.jeff-media:MorePersistentDataTypes:2.4.0")
 }
 
 bukkit {
@@ -48,6 +49,7 @@ tasks {
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
         @Suppress("deprecation", "RedundantSuppression")
         archiveFileName.set("ReElytras-$version.jar")
+        relocate("com.jeff_media.morepersistentdatatypes", "ru.luk.reelytras.libs.morepersistentdatatypes")
     }
 
     compileJava {
